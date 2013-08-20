@@ -170,6 +170,7 @@ class Mobile_Redirect_Per_Post {
 
 	function template_redirect() {
 		//check if tablet box is checked
+
 		if( get_option('mobileredirecttablet', false) == 0) {
 			//redirect non-tablets
 			if(!self::is_mobile() )
@@ -205,7 +206,7 @@ class Mobile_Redirect_Per_Post {
 		if ( $mr_url != $cur_url ) {
 			if ( isset( $_COOKIE['mobile_single_redirect'] ) ) return;
 
-			if ( get_option( 'mobileredirectonce', '' ) )
+			if ( get_option( 'mobileredirectonce', false ) )
 				setcookie( 'mobile_single_redirect', true, time()+(60*60*24*$cookiedays ), '/' );
 
 			wp_redirect( $mr_url, get_option('mobileredirectmode', '301' ) );
