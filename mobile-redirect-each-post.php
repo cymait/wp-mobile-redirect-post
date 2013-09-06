@@ -24,9 +24,9 @@ Author URI: http://cymait.com/
 
 */
 
-$mobile_redirect_per_post = new Mobile_Redirect_Per_Post();
+$mobile_redirect_each_post = new Mobile_Redirect_Each_Post();
 
-register_uninstall_hook( __FILE__, 'uninstall_mobile_redirect_per_post' );
+register_uninstall_hook( __FILE__, 'uninstall_mobile_redirect_each_post' );
 function uninstall_mobile_redirect() {
 	delete_option( 'mobileredirecttoggle' );
 	delete_option( 'mobileredirectmode' );
@@ -35,7 +35,7 @@ function uninstall_mobile_redirect() {
 	delete_option( 'mobileredirectoncedays' );
 }
 
-class Mobile_Redirect_Per_Post {
+class Mobile_Redirect_Each_Post {
 
 	function __construct() { //init function
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -48,7 +48,7 @@ class Mobile_Redirect_Per_Post {
 	}
 
 	function admin_menu() {
-		add_submenu_page( 'options-general.php', __( 'Mobile Redirect Each Post', 'mobile-redirect-per-post' ), __( 'Mobile Redirect Each Post', 'mobile-redirect-per-post' ), 'administrator', __FILE__, array( &$this, 'page' ) );
+		add_submenu_page( 'options-general.php', __( 'Mobile Redirect Each Post', 'mobile-redirect-each-post' ), __( 'Mobile Redirect Each Post', 'mobile-redirect-each-post' ), 'administrator', __FILE__, array( &$this, 'page' ) );
 	}
 
 	function page() { //admin options page
@@ -64,22 +64,22 @@ class Mobile_Redirect_Per_Post {
 			update_option( 'mobileredirectonce', isset( $_POST['mobileredirectonce'] ) ? true : false );
 			update_option( 'mobileredirectoncedays', intval( $_POST['mobileredirectoncedays'] ) );
 
-			echo '<div class="updated"><p>' . __( 'Updated', 'mobile-redirect-per-post' ) . '</p></div>';
+			echo '<div class="updated"><p>' . __( 'Updated', 'mobile-redirect-each-post' ) . '</p></div>';
 		}
 
 		?>
-		<div class="wrap"><h2><?php _e( 'Mobile Redirect Each Post', 'mobile-redirect-per-post' ); ?></h2>
+		<div class="wrap"><h2><?php _e( 'Mobile Redirect Each Post', 'mobile-redirect-each-post' ); ?></h2>
 		<p>
-			<?php _e( 'If the checkbox is checked, and a valid URL is inputted, this site will redirect to the specified URL when visited by a mobile device.', 'mobile-redirect-per-post' ); ?>
+			<?php _e( 'If the checkbox is checked, and a valid URL is inputted, this site will redirect to the specified URL when visited by a mobile device.', 'mobile-redirect-each-post' ); ?>
 		</p>
 
 		<form method="post">
 		<p>
-			<label for="mobiletoggle"><?php _e( 'Enable Redirect:', 'mobile-redirect-per-post' ); ?>
+			<label for="mobiletoggle"><?php _e( 'Enable Redirect:', 'mobile-redirect-each-post' ); ?>
 			<input type="checkbox" value="1" name="mobiletoggle" id="mobiletoggle" <?php checked( get_option('mobileredirecttoggle', ''), 1 ); ?> /></label>
 		</p>
 		<p>
-			<label for="mobilemode"><?php _e( 'Redirect Mode:', 'mobile-redirect-per-post' ); ?>
+			<label for="mobilemode"><?php _e( 'Redirect Mode:', 'mobile-redirect-each-post' ); ?>
 			<select id="mobilemode" name="mobilemode">
 				<option value="301" <?php selected( get_option('mobileredirectmode', 301 ), 301 ); ?>>301</option>
 				<option value="302" <?php selected( get_option('mobileredirectmode'), 302 ); ?>>302</option>
@@ -87,15 +87,15 @@ class Mobile_Redirect_Per_Post {
 			</label>
 		</p>
 		<p>
-			<label for="mobileredirecttablet"><?php _e( 'Redirect Tablets:', 'mobile-redirect-per-post' ); ?>
+			<label for="mobileredirecttablet"><?php _e( 'Redirect Tablets:', 'mobile-redirect-each-post' ); ?>
 			<input type="checkbox" value="1" name="mobileredirecttablet" id="mobileredirecttablet" <?php checked( get_option('mobileredirecttablet', ''), 1 ); ?> /></label>
 		</p>
 		<p>
-			<label for="mobileredirectonce"><?php _e( 'Redirect Once:', 'mobile-redirect-per-post' ); ?>
+			<label for="mobileredirectonce"><?php _e( 'Redirect Once:', 'mobile-redirect-each-post' ); ?>
 			<input type="checkbox" value="1" name="mobileredirectonce" id="mobileredirectonce" <?php checked( get_option('mobileredirectonce', ''), 1 ); ?> /></label>
 		</p>
 		<p>
-			<label for="mobileredirectoncedays"><?php _e( 'Redirect Once Cookie Expiry:', 'mobile-redirect-per-post' ); ?>
+			<label for="mobileredirectoncedays"><?php _e( 'Redirect Once Cookie Expiry:', 'mobile-redirect-each-post' ); ?>
 			<input type="text" name="mobileredirectoncedays" id="mobileredirectoncedays" value="<?php echo esc_attr( get_option('mobileredirectoncedays', 7 ) ); ?>" /> days.</label>
 			<span class="description">If <em>Redirect Once</em> is checked, a cookie will be set for the user to prevent them from being continually redirected to the same page. This cookie will expire by default after 7 days. Setting to zero or less is effectively the same as unchecking Redirect Once</span>
 		</p>
@@ -125,7 +125,7 @@ class Mobile_Redirect_Per_Post {
 			'qwap','sage','sams','sany','sch-','sec-','send','seri','sgh-','shar',
 			'sie-','siem','smal','smar','sony','sph-','symb','t-mo','teli','tim-',
 			'tosh','tsm-','upg1','upsi','vk-v','voda','wap-','wapa','wapi','wapp',
-			'wapr','webc','winw','winw','xda','xda-');
+			'wapr','webc','winw','winw','xda','xda-', 'bb10');
 		if(in_array($mobile_ua,$mobile_agents)) {
 			$mobile_browser++;
 		}
@@ -209,7 +209,7 @@ class Mobile_Redirect_Per_Post {
 			if ( get_option( 'mobileredirectonce', false ) )
 				setcookie( 'mobile_single_redirect', true, time()+(60*60*24*$cookiedays ), '/' );
 
-			wp_redirect( $mr_url, get_option('mobileredirectmode', '301' ) );
+			wp_redirect( $mr_url );
 			exit;
 		}
 
